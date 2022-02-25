@@ -5,14 +5,13 @@ namespace App\Controller\Post;
 use App\Entity\Post;
 use App\Form\PostType;
 use Doctrine\ORM\EntityManagerInterface;
-use JetBrains\PhpStorm\ArrayShape;
-use JetBrains\PhpStorm\NoReturn;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
-#[Route("/api/post")]
 final class CreatePostController extends AbstractController
 {
    private FormFactoryInterface $formFactory;
@@ -24,23 +23,16 @@ final class CreatePostController extends AbstractController
        $this->entityManager = $entityManager;
    }
 
-    #[ArrayShape(['post' => "\App\Entity\Post"])] #[Route("/create", name:"api_post_created", methods: ['GET','POST'] )]
-    #[NoReturn] public function create(Request $request): array
+   #[Route("/api/post/create", name:"api_post_created", methods: ['POST'] )]
+    public function create(Request $request, SerializerInterface $serializer): JsonResponse
    {
-       $post = new Post();
+       $jsonReceived = $request->getContent();
 
-       $form = $this->formFactory->createNamed('post', PostType::class, $post);
-       $form->submit($request->request->get('post'));
+       $post = $serializer->deserialize($jsonReceived, Post::class, 'json');
 
-       dd($form);
+       $this->entityManager->persist($post);
+       $this->entityManager->flush();
 
-       if ($form->isValid()) {
-           $this->entityManager->persist($post);
-           $this->entityManager->flush();
-
-           return ['post' => $post ];
-       }
-
-       return ['post' => $form];
+       return $this->json($post, 201, [], ['groups' => 'post:read']);
    }
 }

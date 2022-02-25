@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\PostRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 class Post
@@ -11,18 +12,23 @@ class Post
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups("post:read")]
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups("post:read")]
     private string $title;
 
     #[ORM\Column(type: 'text')]
+    #[Groups("post:read")]
     private string $description;
 
     #[ORM\Column(type: 'datetime')]
+    #[Groups("post:read")]
     private ?\DateTime $createdAt;
 
     #[ORM\Column(type: 'datetime')]
+    #[Groups("post:read")]
     private ?\DateTime $updatedAt;
 
     public function __construct()
