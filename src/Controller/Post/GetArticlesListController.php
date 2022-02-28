@@ -23,15 +23,15 @@ final class GetArticlesListController extends AbstractController
      * @throws ExceptionInterface
      */
     #[Route("/api/post/list", name:"api_post_list", methods: ['GET'] )]
-     public function index(SerializerInterface $serializer)
-     {
-         $posts = $this->postRepository->findAll();
-         $postsNormalizes = $serializer->normalize($posts,'json', ['groups' => 'post:read'] );
-         $json = json_encode($postsNormalizes);
-         $response = new Response($json, 200, [
+     public function index(SerializerInterface $serializer): Response
+    {
+        $posts = $this->postRepository->findAll();
+        $postsNormalizes = $serializer->normalize($posts,'json', ['groups' => 'post:read'] );
+        $json = json_encode($postsNormalizes);
+        $response = new Response($json, 200, [
             "Content-Type" => "application/json"
-         ]);
+        ]);
 
-         return $response;
+        return $response;
      }
 }

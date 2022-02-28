@@ -3,7 +3,6 @@
 namespace App\Controller\Post;
 
 use App\Entity\Post;
-use App\Form\PostType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -26,9 +25,9 @@ final class CreatePostController extends AbstractController
    #[Route("/api/post/create", name:"api_post_created", methods: ['POST'] )]
     public function create(Request $request, SerializerInterface $serializer): JsonResponse
    {
-       $jsonReceived = $request->getContent();
+       $data = $request->getContent();
 
-       $post = $serializer->deserialize($jsonReceived, Post::class, 'json');
+       $post = $serializer->deserialize($data, Post::class, 'json');
 
        $this->entityManager->persist($post);
        $this->entityManager->flush();
