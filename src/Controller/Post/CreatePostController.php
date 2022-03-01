@@ -5,7 +5,6 @@ namespace App\Controller\Post;
 use App\Entity\Post;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,12 +12,10 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 final class CreatePostController extends AbstractController
 {
-   private FormFactoryInterface $formFactory;
    private EntityManagerInterface $entityManager;
 
-   public function __construct(FormFactoryInterface $formFactory, EntityManagerInterface $entityManager)
+   public function __construct(EntityManagerInterface $entityManager)
    {
-       $this->formFactory = $formFactory;
        $this->entityManager = $entityManager;
    }
 

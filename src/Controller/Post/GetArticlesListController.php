@@ -28,10 +28,8 @@ final class GetArticlesListController extends AbstractController
         $posts = $this->postRepository->findAll();
         $postsNormalizes = $serializer->normalize($posts,'json', ['groups' => 'post:read'] );
         $json = json_encode($postsNormalizes);
-        $response = new Response($json, 200, [
+        return new Response($json, 200, [
             "Content-Type" => "application/json"
         ]);
-
-        return $response;
      }
 }

@@ -2,18 +2,16 @@
 
 namespace App\Controller\Post;
 
-use App\Entity\Post;
-use App\Form\PostType;
 use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-final class UpdatePostController extends AbstractController
+final class DeleteArticleController extends AbstractController
 {
     private EntityManagerInterface $entityManager;
+
     private PostRepository $postRepository;
 
     public function __construct(EntityManagerInterface $entityManager, PostRepository $postRepository)
@@ -22,18 +20,13 @@ final class UpdatePostController extends AbstractController
         $this->postRepository = $postRepository;
     }
 
-    #[Route("/api/post/update/{id}", name:"api_post_update", methods: ['PUT'] )]
-    public function update($id, Request $request): JsonResponse
+    #[Route("/api/post/delete/{id}", name:"api_post_delete", methods: ['DELETE'] )]
+    public function delete($id)
     {
-        $data = json_decode($request->getContent(), true);
         $post = $this->postRepository->findOneBy(['id' => $id]);
-        $form = $this->createForm(PostType::class, $post);
-        $form->submit($data);
-
-
-        $this->entityManager->persist($post);
+        $this->entityManager->remove($post);
         $this->entityManager->flush();
 
-        return $this->json($post, 201, [], ['groups' => 'post:read']);
+        return new JsonResponse();
     }
 }
