@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
+#[ORM\Table(name: "posts")]
 class Post
 {
     #[ORM\Id]
@@ -30,6 +31,9 @@ class Post
     #[ORM\Column(type: 'datetime')]
     #[Groups("post:read")]
     private ?\DateTime $updatedAt;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'posts')]
+    private ?User $user;
 
     public function __construct()
     {
@@ -86,6 +90,18 @@ class Post
     public function setUpdatedAt(\DateTime $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
