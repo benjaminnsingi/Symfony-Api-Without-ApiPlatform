@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
-use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 
 final class GetArticlesListController extends AbstractController
@@ -23,10 +23,10 @@ final class GetArticlesListController extends AbstractController
      * @throws ExceptionInterface
      */
     #[Route("/api/post/list", name:"api_post_list", methods: ['GET'] )]
-     public function index(SerializerInterface $serializer): Response
+     public function index(NormalizerInterface $normalizer): Response
     {
         $posts = $this->postRepository->findAll();
-        $postsNormalizes = $serializer->normalize($posts,'json', ['groups' => 'post:read'] );
+        $postsNormalizes = $normalizer->normalize($posts,'json', ['groups' => 'post:read'] );
         $json = json_encode($postsNormalizes);
         return new Response($json, 200, [
             "Content-Type" => "application/json"

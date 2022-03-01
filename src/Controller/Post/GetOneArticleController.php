@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class GetOneArticleController extends AbstractController
+final class GetOneArticleController extends AbstractController
 {
      private PostRepository $postRepository;
 
@@ -22,8 +22,8 @@ class GetOneArticleController extends AbstractController
      * @throws ExceptionInterface
      */
     #[Route("/api/post/show/{id}", name:"api_post_show", methods: ['GET'] )]
-     public function show($id,NormalizerInterface $normalizer)
-     {
+     public function show($id,NormalizerInterface $normalizer): Response
+    {
          $post = $this->postRepository->findOneBy(['id' => $id]);
          $postNormalizes = $normalizer->normalize($post, 'json', ['groups' => 'post:read']);
          $json = json_encode($postNormalizes);
