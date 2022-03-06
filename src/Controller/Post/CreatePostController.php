@@ -25,6 +25,7 @@ final class CreatePostController extends AbstractController
        $data = $request->getContent();
 
        $post = $serializer->deserialize($data, Post::class, 'json');
+       $post->setUser($this->getUser());
 
        $this->entityManager->persist($post);
        $this->entityManager->flush();
